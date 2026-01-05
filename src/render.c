@@ -1,6 +1,7 @@
 #include <kc/render/render.h>
 
 GLFWwindow *render_window = null;
+double previous_time;
 
 void renderErrorCallback(int error, const char *description) {
     fprintf(stderr, "[GLFW/ERROR %d] %s\n", error, description);
@@ -45,6 +46,8 @@ void renderInit(int width, int height, bool fullscreen) {
     dbgWrite("RENDER", INFO, "      Renderer:   %s\n", renderer);
     dbgWrite("RENDER", INFO, "      OpenGL:     %s\n", gl_version);
     dbgWrite("RENDER", INFO, "      GLSL:       %s\n", glsl_ver);
+
+    previous_time = glfwGetTime(); 
 }
 
 void renderTerminate(void) {
@@ -69,6 +72,24 @@ void renderFillBackground(color_t color) {
 void renderBeginShader(shader_t shader) {
     useShader(shader);
 }
-void renderEndShader() {
+
+void renderEndShader(void) {
     glUseProgram(0);
+}
+
+int renderGetFPS(void) {
+    double current_time = glfwGetTime();
+    int frames = 0;
+    int fps = 0;
+
+    frames++;
+
+    if (current_time - previous_time >= 1.0f) {
+        fps = frames;
+
+        frames = 0;
+        previous_time = current_time;
+
+        return fps;
+    }
 }

@@ -26,4 +26,6 @@ void renderEndDrawing(void);
 void renderFillBackground(color_t color);
 
 void renderBeginShader(shader_t shader);
-void renderEndShader();
+void renderEndShader(void);
+
+int renderGetFPS(void);
