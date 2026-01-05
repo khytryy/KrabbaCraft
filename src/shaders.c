@@ -76,3 +76,27 @@ shader_t loadShaderMem(const char *vertex, const char *fragment) {
 void useShader(shader_t shader) {
     glUseProgram(shader.program);
 }
+
+void shaderSetBool(shader_t shader, const char* name, bool value) {
+    glUniform1i(glGetUniformLocation(shader.program, name), (int)value);
+}
+
+void shaderSetInt(shader_t shader, const char* name, int value) {
+    glUniform1i(glGetUniformLocation(shader.program, name), value);
+}
+
+void shaderSetFloat(shader_t shader, const char* name, float value) {
+    glUniform1f(glGetUniformLocation(shader.program, name), value);
+}
+
+void shaderSetVec2(shader_t shader, const char* name, vector2_t value) {
+    glUniform2f(glGetUniformLocation(shader.program, name), value.x, value.y);
+}
+
+void shaderSetVec3(shader_t shader, const char* name, vector3_t value) {
+    glUniform3f(glGetUniformLocation(shader.program, name), value.x, value.y, value.z);
+}
+
+void shaderSetVec4(shader_t shader, const char* name, vector4_t value) {
+    glUniform4f(glGetUniformLocation(shader.program, name), value.x, value.y, value.z, value.w);
+}
