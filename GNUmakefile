@@ -4,7 +4,7 @@ SRC := $(wildcard src/*.c)
 OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
 
 CFLAGS := -Iinclude -g $(shell pkg-config --cflags glfw3)
-LDFLAGS := $(shell pkg-config --libs glfw3) -lGL -lpthread -rdynamic
+LDFLAGS := $(shell pkg-config --libs glfw3) -lGL -lpthread -rdynamic -lm
 
 TARGET := krabbacraft
 

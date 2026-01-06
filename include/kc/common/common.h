@@ -10,6 +10,7 @@
 
 #define uint unsigned int
 #define u8 unsigned char
+#define ubyte unsigned char
 #define u16 unsigned short
 
 #define null ((void *)0)
@@ -46,3 +47,4 @@ typedef struct {
 } color_t;
 
 #define BLACK (color_t){0, 0, 0, 255}
+#define WHITE (color_t){255, 255, 255, 255}

@@ -7,6 +7,10 @@ void renderErrorCallback(int error, const char *description) {
     fprintf(stderr, "[GLFW/ERROR %d] %s\n", error, description);
 }
 
+void renderFramebufferSizeCallback(GLFWwindow *window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 void renderInit(int width, int height, bool fullscreen) {
 
     glfwSetErrorCallback(renderErrorCallback);
@@ -35,6 +39,7 @@ void renderInit(int width, int height, bool fullscreen) {
     }
 
     glViewport(0, 0, width, height);
+    glfwSetFramebufferSizeCallback(render_window, renderFramebufferSizeCallback);
 
     const GLubyte *vendor           = glGetString(GL_VENDOR);
     const GLubyte *renderer         = glGetString(GL_RENDERER);
@@ -77,19 +82,6 @@ void renderEndShader(void) {
     glUseProgram(0);
 }
 
-int renderGetFPS(void) {
-    double current_time = glfwGetTime();
-    int frames = 0;
-    int fps = 0;
-
-    frames++;
-
-    if (current_time - previous_time >= 1.0f) {
-        fps = frames;
-
-        frames = 0;
-        previous_time = current_time;
-
-        return fps;
-    }
+bool renderWindowShouldClose(void) {
+    return glfwWindowShouldClose(render_window);
 }

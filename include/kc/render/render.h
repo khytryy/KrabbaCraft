@@ -13,9 +13,8 @@
 
 extern GLFWwindow *render_window;
 
-#define renderWindowShouldClose glfwWindowShouldClose(render_window)
-
-void renderErrorCallback(int error, const char *description) ;
+void renderErrorCallback(int error, const char *description);
+void renderFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
 void renderInit(int width, int height, bool fullscreen);
 void renderTerminate(void);
@@ -29,3 +28,5 @@ void renderBeginShader(shader_t shader);
 void renderEndShader(void);
 
 int renderGetFPS(void);
+
+bool renderWindowShouldClose(void);

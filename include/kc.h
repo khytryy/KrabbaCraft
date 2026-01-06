@@ -8,3 +8,4 @@
 #include <kc/debug/debug.h>
 
 #include <kc/shaders/shaders.h>
+#include <kc/textures/textures.h>
