@@ -48,17 +48,22 @@ int main() {
     glEnableVertexAttribArray(2);
 
     image_t krabba = loadImage(".krabbacraft/res/images/KinesiskaKrabban.jpeg");
+    image_t grass = loadImage(".krabbacraft/res/images/grass.jpeg");
 
     texture_t krabbaTex = createTextureFromImage(krabba);
+    texture_t grassTex = createTextureFromImage(grass);
 
     while (!renderWindowShouldClose()) {
         renderBeginDrawing();
             renderFillBackground(BLACK);
 
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, krabbaTex.id);
+
             renderBeginShader(my_shader);
 
                 shaderSetInt(my_shader, "texture1", 0);
+
                 glBindVertexArray(vao);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             renderEndShader();
