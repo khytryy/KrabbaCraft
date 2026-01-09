@@ -2,7 +2,6 @@
 #include <kc.h>
 
 #include <cglm/cglm.h>
-#include <cglm/struct.h>
 
 float vertices[] = {
     // Vertex cords     RGB              UV
@@ -55,6 +54,13 @@ int main() {
 
     texture_t krabbaTex = createTextureFromImage(krabba);
     texture_t grassTex = createTextureFromImage(grass);
+
+    mat4 trans;
+
+    glm_mat4_identity(trans);
+    glm_rotate(trans, glm_rad(90.0f), (vec3){0.0f, 0.0f, 1.0f});
+
+    glm_scale(trans, (vec3){0.5f, 0.5f, 0.5f});
 
     while (!renderWindowShouldClose()) {
         renderBeginDrawing();
