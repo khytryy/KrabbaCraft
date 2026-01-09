@@ -1,10 +1,10 @@
 CC = gcc
 
-SRC := $(wildcard src/*.c)
+SRC := $(shell find src -name "*.c")
 OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
 
-CFLAGS := -Iinclude -g $(shell pkg-config --cflags glfw3)
-LDFLAGS := $(shell pkg-config --libs glfw3) -lGL -lpthread -rdynamic -lm
+CFLAGS := -Iinclude -g $(shell pkg-config --cflags glfw3) $(shell pkg-config --cflags cglm)
+LDFLAGS := $(shell pkg-config --libs glfw3) -lGL -lpthread -rdynamic -lm $(shell pkg-config --libs cglm)
 
 TARGET := krabbacraft
 
@@ -15,13 +15,9 @@ all: $(TARGET)
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) $(LDFLAGS) -o $@
 
-# Compile src/foo.c → build/foo.o
-build/%.o: src/%.c | build
+build/%.o: src/%.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# Ensure build/ exists
-build:
-	mkdir -p build
 
 clean:
 	rm -rf build $(TARGET)

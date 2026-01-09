@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <kc.h>
 
+#include <cglm/cglm.h>
+#include <cglm/struct.h>
+
 float vertices[] = {
     // Vertex cords     RGB              UV
     -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,    // Top right
@@ -61,7 +64,6 @@ int main() {
             glBindTexture(GL_TEXTURE_2D, krabbaTex.id);
 
             renderBeginShader(my_shader);
-
                 shaderSetInt(my_shader, "texture1", 0);
 
                 glBindVertexArray(vao);
