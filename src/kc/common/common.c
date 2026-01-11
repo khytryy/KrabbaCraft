@@ -3,7 +3,7 @@
 char *loadFile(const char *path) {
     FILE *f = fopen(path, "r");
     if (!f) {
-        dbgWrite("FILE", ERROR, "Error opening %s: ", path);
+        dbgWrite("FILE", LOG_LEVEL_ERROR, "Error opening %s: ", path);
         perror("");
 
         abort();
@@ -17,7 +17,7 @@ char *loadFile(const char *path) {
     if (!data) {
         fclose(f);
 
-        dbgWrite("FILE", ERROR, "Error in malloc");
+        dbgWrite("FILE", LOG_LEVEL_ERROR, "Error in malloc");
         perror("");
 
         abort();

@@ -7,7 +7,7 @@ image_t loadImage(const char *path) {
     stbi_set_flip_vertically_on_load(1);
     image.data = stbi_load(path, &image.width, &image.height, &image.channels, 0);
     if (!image.data) {
-        dbgWrite("TEXTURES", ERROR, "Image data is null.\n");
+        dbgWrite("TEXTURES", LOG_LEVEL_FATAL_ERROR, "Image data is null.\n");
         abort();
     }
 

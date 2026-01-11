@@ -22,28 +22,44 @@ void _dbgGetError(const char *file, int line, const char *function) {
     }
 }
 
-void dbgWrite(const char *name, error_t error_type, const char *restrict format, ...) {
+void dbgWrite(const char *name, log_level_t log_level, const char *restrict format, ...) {
     va_list args;
     va_start(args, format);
 
     char *error;
-    switch (error_type) {
-        case INFO:
+    char *error_color;
+    
+    switch (log_level) {
+        case LOG_LEVEL_INFO:
             error = "INFO";
+            error_color = "";
+
             break;
-        case DEBUG:
+        case LOG_LEVEL_DEBUG:
             error = "DEBUG";
+            error_color = "\033[35m";
+
             break;
-        case WARNING:
+        case LOG_LEVEL_WARNING:
             error = "WARNING";
+            error_color = "\033[33m";
+
             break;
-        case ERROR:
+        case LOG_LEVEL_ERROR:
             error = "ERROR";
+            error_color = "\033[91m";
+
+            break;
+        case LOG_LEVEL_FATAL_ERROR:
+            error = "FATAL";
+            error_color = "\033[31m";
+
             break;
     }
 
-    fprintf(stderr, "[%s/%s] ", name, error);
-    vfprintf(stderr, format, args);
+    printf("%s[%s/%s] ", error_color, name, error);
+    vprintf(format, args);
+    printf("\033[0m");
     
     va_end(args);
 }

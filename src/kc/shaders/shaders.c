@@ -27,7 +27,7 @@ shader_t loadShaderMem(const char *vertex, const char *fragment) {
     if (!success) {
         glGetShaderInfoLog(vertex_shader, 512, null, info_log);
 
-        dbgWrite("SHADERS", ERROR, "Vertex shader compilation error: %s\n", info_log);
+        dbgWrite("SHADERS", LOG_LEVEL_ERROR, "Vertex shader compilation error: %s\n", info_log);
         abort();
     }
 
@@ -43,7 +43,7 @@ shader_t loadShaderMem(const char *vertex, const char *fragment) {
     if (!success) {
         glGetShaderInfoLog(fragment_shader, 512, null, info_log);
 
-        dbgWrite("SHADERS", ERROR, "Fragment shader compilation error: %s\n", info_log);
+        dbgWrite("SHADERS", LOG_LEVEL_ERROR, "Fragment shader compilation error: %s\n", info_log);
         abort();
     }
 
@@ -60,7 +60,7 @@ shader_t loadShaderMem(const char *vertex, const char *fragment) {
     if (!success) {
         glGetProgramInfoLog(program, 512, null, info_log);
 
-        dbgWrite("SHADERS", ERROR, "Program linking error: %s\n", info_log);
+        dbgWrite("SHADERS", LOG_LEVEL_ERROR, "Program linking error: %s\n", info_log);
         abort();
     }
 
@@ -69,7 +69,7 @@ shader_t loadShaderMem(const char *vertex, const char *fragment) {
 
     shader.program = program;
 
-    dbgWrite("SHADERS", INFO, "Shader loaded!\n");
+    dbgWrite("SHADERS", LOG_LEVEL_INFO, "Shader loaded!\n");
     return shader;
 }
 
@@ -99,4 +99,8 @@ void shaderSetVec3(shader_t shader, const char* name, vector3_t value) {
 
 void shaderSetVec4(shader_t shader, const char* name, vector4_t value) {
     glUniform4f(glGetUniformLocation(shader.program, name), value.x, value.y, value.z, value.w);
+}
+
+void shaderSetMat4(shader_t shader, const char* name, mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(shader.program, name), 1, GL_FALSE, (float*)value);
 }

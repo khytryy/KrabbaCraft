@@ -9,3 +9,5 @@
 
 #include <kc/shaders/shaders.h>
 #include <kc/textures/textures.h>
+
+#include <kc/modding/tar.h>

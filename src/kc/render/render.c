@@ -3,20 +3,27 @@
 GLFWwindow *render_window = null;
 double previous_time;
 
+int render_width, render_height;
+
 void renderErrorCallback(int error, const char *description) {
     fprintf(stderr, "[GLFW/ERROR %d] %s\n", error, description);
 }
 
 void renderFramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
+
+    render_width = width;
+    render_height = height;
 }
 
 void renderInit(int width, int height, bool fullscreen) {
+    render_width = width;
+    render_height = height;
 
     glfwSetErrorCallback(renderErrorCallback);
 
     if (!glfwInit()) {
-        dbgWrite("GLFW", ERROR, "Failed to initialize\n");
+        dbgWrite("GLFW", LOG_LEVEL_ERROR, "Failed to initialize\n");
         abort();
     }
 
@@ -27,14 +34,14 @@ void renderInit(int width, int height, bool fullscreen) {
     
     render_window = glfwCreateWindow(width, height, GAME_VER, fullscreen ? glfwGetPrimaryMonitor() : null, null);
     if (render_window == null) {
-        dbgWrite("GLFW", ERROR, "Render window is null\n");
+        dbgWrite("GLFW", LOG_LEVEL_ERROR, "Render window is null\n");
         abort();
     }
 
     glfwMakeContextCurrent(render_window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        dbgWrite("GLAD", ERROR, "Failed to initialize\n");
+        dbgWrite("GLAD", LOG_LEVEL_ERROR, "Failed to initialize\n");
         abort();
     }
 
@@ -46,11 +53,11 @@ void renderInit(int width, int height, bool fullscreen) {
     const GLubyte *gl_version       = glGetString(GL_VERSION);
     const GLubyte *glsl_ver         = glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-    dbgWrite("RENDER", INFO, " OpenGL device information:\n");
-    dbgWrite("RENDER", INFO, "      Vendor:     %s\n", vendor);
-    dbgWrite("RENDER", INFO, "      Renderer:   %s\n", renderer);
-    dbgWrite("RENDER", INFO, "      OpenGL:     %s\n", gl_version);
-    dbgWrite("RENDER", INFO, "      GLSL:       %s\n", glsl_ver);
+    dbgWrite("RENDER", LOG_LEVEL_INFO, " OpenGL device information:\n");
+    dbgWrite("RENDER", LOG_LEVEL_INFO, "      Vendor:     %s\n", vendor);
+    dbgWrite("RENDER", LOG_LEVEL_INFO, "      Renderer:   %s\n", renderer);
+    dbgWrite("RENDER", LOG_LEVEL_INFO, "      OpenGL:     %s\n", gl_version);
+    dbgWrite("RENDER", LOG_LEVEL_INFO, "      GLSL:       %s\n", glsl_ver);
 
     previous_time = glfwGetTime(); 
 }
@@ -61,7 +68,7 @@ void renderTerminate(void) {
 
 void renderBeginDrawing(void) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void renderEndDrawing(void) {

@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include <cglm/cglm.h>
+
 typedef struct {
     uint    program;
     int     *locs;
@@ -26,3 +28,5 @@ void shaderSetFloat(shader_t shader, const char* name, float value);
 void shaderSetVec2(shader_t shader, const char* name, vector2_t value);
 void shaderSetVec3(shader_t shader, const char* name, vector3_t value);
 void shaderSetVec4(shader_t shader, const char* name, vector4_t value);
+
+void shaderSetMat4(shader_t shader, const char* name, mat4 value);

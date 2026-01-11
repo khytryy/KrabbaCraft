@@ -12,6 +12,9 @@
 #include <kc/shaders/shaders.h>
 
 extern GLFWwindow *render_window;
+extern double previous_time;
+
+extern int render_width, render_height;
 
 void renderErrorCallback(int error, const char *description);
 void renderFramebufferSizeCallback(GLFWwindow *window, int width, int height);
