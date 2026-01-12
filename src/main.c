@@ -4,25 +4,28 @@
 #include <cglm/cglm.h>
 
 float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    // Back
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // Bottom left
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // Bottom right
+     0.5f,  0.5f, -0.5f,  1.0f, 2.0f, // Top right
+     0.5f,  0.5f, -0.5f,  1.0f, 2.0f, // Top right
+    -0.5f,  0.5f, -0.5f,  1.0f, 3.0f, // Top left
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // Bottom left
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    // Front
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // Bottom left
+     0.5f, -0.5f,  0.5f,  1.0f, 1.0f, // Bottom right
+     0.5f,  0.5f,  0.5f,  1.0f, 2.0f, // Top right
+     0.5f,  0.5f,  0.5f,  1.0f, 2.0f, // Top right
+    -0.5f,  0.5f,  0.5f,  1.0f, 3.0f, // Top left
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // Bottom left
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    // Left
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // Bottom left
     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 2.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 2.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 3.0f,
     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
@@ -69,15 +72,15 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
     glEnableVertexAttribArray(0);
 
-    // UV coordinates
+    // Tile data
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
     glEnableVertexAttribArray(1);
 
-    image_t krabba = loadImage(".krabbacraft/res/images/KinesiskaKrabban.jpeg");
-    image_t grass = loadImage(".krabbacraft/res/images/grass.jpeg");
+    image_t krabba          = loadImage(".krabbacraft/res/images/KinesiskaKrabban.jpeg");
+    image_t atlas           = loadImage(".krabbacraft/res/images/atlas.png");
 
-    texture_t krabba_tex = createTextureFromImage(krabba);
-    texture_t grass_tex = createTextureFromImage(grass);
+    texture_t krabba_tex    = createTextureFromImage(krabba);
+    texture_t atlas_tex     = createTextureFromImage(atlas);
 
     mat4 proj, model, view;
     glm_perspective(glm_rad(45.0f), (float)render_width / (float)render_height, 0.1f, 1000.0f, proj);
@@ -96,7 +99,7 @@ int main() {
             renderFillBackground(BLACK);
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, krabba_tex.id);
+            glBindTexture(GL_TEXTURE_2D, atlas_tex.id);
 
             renderBeginShader(my_shader);
 
@@ -104,8 +107,11 @@ int main() {
                 shaderSetMat4(my_shader, "view", view);
                 shaderSetMat4(my_shader, "model", model);
 
+                shaderSetInt(my_shader, "tileWidth", 16);
+                shaderSetInt(my_shader, "atlasWidth", 48);
+
                 glm_mat4_identity(model);
-                glm_rotate(model, (float)glfwGetTime() * glm_rad(50.0f), (vec3){1.0f, 1.0f, -0.5f});
+                glm_rotate(model, (float)glfwGetTime() * glm_rad(50.0f), (vec3){0.0f, 1.0f, 0.0f});
 
                 glBindVertexArray(vao);
                 glDrawArrays(GL_TRIANGLES, 0, 36);

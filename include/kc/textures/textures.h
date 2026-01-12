@@ -14,6 +14,10 @@ typedef struct {
     uint    id;
 } texture_t;
 
+typedef struct {
+
+} tile_t;
+
 image_t loadImage(const char *path);
 texture_t createTextureFromImage(image_t image);
 
