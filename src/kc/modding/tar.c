@@ -3,6 +3,7 @@
 tar_mod_t mods[TAR_MAX_MODS];
 size_t mod_count = 0;
 
+// Define functions inside tarLogger
 const struct luaL_Reg tarLogger[] = {
     { "info", tarLogInfo },
     { "debug", tarLogDebug },
@@ -50,7 +51,7 @@ void tarInit() {
         return;
     }
 
-    dbgWrite("TAR", LOG_LEVEL_INFO, "Starting up tar mods...\n");
+    dbgWrite("TAR", LOG_LEVEL_INFO, "Loading lua files...\n");
 
     for (size_t i = 0; i < tar_mods.u.arr.size; i++) {
         toml_datum_t lua_file = tar_mods.u.arr.elem[i];

@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include <stdarg.h>
+#include <stdlib.h>
 
 typedef enum {
     LOG_LEVEL_INFO,

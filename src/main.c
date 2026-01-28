@@ -2,6 +2,9 @@
 #include <kc.h>
 
 #include <cglm/cglm.h>
+#include <pthread.h>
+
+#include <kc/nbt/nbt.h>
 
 float vertices[] = {
     // Back
@@ -30,28 +33,29 @@ float vertices[] = {
 
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 2.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 2.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 3.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 2.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 2.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 3.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+     0.5f,  0.5f,  0.5f,  1.0f, 2.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 2.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 3.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f
 };
 
 int main() {
     renderInit(800, 800, false);
+    tarInit();
 
     shader_t my_shader = loadShader(".krabbacraft/res/shaders/vertex.glsl",".krabbacraft/res/shaders/fragment.glsl");
 
@@ -90,7 +94,12 @@ int main() {
 
     shaderSetInt(my_shader, "texture1", 0);
 
-    tarInit();
+    server_settings_t server_settings;
+    server_settings.port = 25565;
+    server_settings.queueSize = 20;
+
+    pthread_t server_thread;
+    pthread_create(&server_thread, NULL, kcServerStart, &server_settings);
 
     while (!renderWindowShouldClose()) {
         tarOnTick((float)glfwGetTime());
@@ -103,15 +112,15 @@ int main() {
 
             renderBeginShader(my_shader);
 
+                glm_mat4_identity(model);
+                glm_rotate(model, (float)glfwGetTime() * glm_rad(50.0f), (vec3){0.0f, 1.0f, 0.0f});
+
                 shaderSetMat4(my_shader, "projection", proj);
                 shaderSetMat4(my_shader, "view", view);
                 shaderSetMat4(my_shader, "model", model);
 
                 shaderSetInt(my_shader, "tileWidth", 16);
                 shaderSetInt(my_shader, "atlasWidth", 48);
-
-                glm_mat4_identity(model);
-                glm_rotate(model, (float)glfwGetTime() * glm_rad(50.0f), (vec3){0.0f, 1.0f, 0.0f});
 
                 glBindVertexArray(vao);
                 glDrawArrays(GL_TRIANGLES, 0, 36);

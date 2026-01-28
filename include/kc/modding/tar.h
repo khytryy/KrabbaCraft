@@ -49,3 +49,9 @@ static int tarLogError(lua_State *L);
 static int tarLogFerror(lua_State *L);
 
 void tarOnTick(float time);
+
+void tarOnInit();
+void tarOnBeginDrawing();
+void tarOnEndDrawing();
+
+void tarOnServerPackageReceived();
