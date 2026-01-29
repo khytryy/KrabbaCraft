@@ -22,9 +22,22 @@ void *kcClientStart(char* ip, int port, auth_info_t auth_info) {
         exit(1);
     }
 
-    // Send the login info to the server to validate
-    uint64_t access_token = authTokenToInt(auth_info.access_token);
-    uint64_t client_token = authTokenToInt(auth_info.client_token);
+    nbt_buffer_t *buffer;
+
+    // Send the login data
+    nbtBufferWriteU64(buffer, auth_info.expires_after);
+    nbtBufferWriteU64(buffer, auth_info.access_token);
+    nbtBufferWriteU64(buffer, auth_info.client_token);
+
+    nbtReserverBuffer(buffer, 32);
+    memcpy(buffer->data + buffer->size, auth_info.username, 32);
+    buffer->size += 32;
+
+    nbtReserverBuffer(buffer, 32);
+    memcpy(buffer->data + buffer->size, auth_info.uuid, 32);
+    buffer->size += 32;
+
+    send(client_fd, buffer->data, buffer->size, 0);
 
 }
 
